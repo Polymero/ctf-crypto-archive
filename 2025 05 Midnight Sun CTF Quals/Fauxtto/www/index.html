@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HonestLotto — The Secure Lottery System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@700;800;900&display=swap');
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4CAF50;
+            --dark: #2A265F;
+            --light: #F9F9FF;
+            --danger: #FF5252;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --info: #2196F3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #121212, #2A265F);
+            min-height: 100vh;
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNDAwIDQwMCI+CiAgPGRlZnM+CiAgICA8ZmlsdGVyIGlkPSJmMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBpbj0iU291cmNlR3JhcGhpYyIgc3RkRGV2aWF0aW9uPSIyMCIgLz4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSIxNTAiIGN5PSIxNTAiIHI9IjQwIiBmaWxsPSJyZ2JhKDEwOCwgOTksIDI1NSwgMC4yKSIgZmlsdGVyPSJ1cmwoI2YxKSIgLz4KICA8Y2lyY2xlIGN4PSIyODAiIGN5PSIyMjAiIHI9IjQwIiBmaWxsPSJyZ2JhKDc2LCAxNzUsIDgwLCAwLjIpIiBmaWx0ZXI9InVybCgjZjEpIiAvPgo8L3N2Zz4=') repeat;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 40px;
+        }
+        
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            width: calc(50% - 15px);
+            min-width: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.03),
+                transparent
+            );
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--light);
+            font-size: 22px;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .info-card p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            color: var(--light);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), #8A84FF);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: all 0.8s ease;
+        }
+        
+        .btn:hover::after {
+            transform: rotate(45deg) translate(100%, 100%);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alert i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .alert-error {
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #FF5252;
+        }
+        
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+        
+        .prize-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .prize-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--warning);
+        }
+        
+        .ticket-display {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .ticket-number {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--light);
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.7);
+        }
+        
+        .lottery-balls {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 10px;
+        }
+        
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            animation: bounce 2s infinite;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ball:nth-child(1) {
+            background: linear-gradient(135deg, #FF5252, #FF7B7B);
+            animation-delay: 0s;
+        }
+        
+        .ball:nth-child(2) {
+            background: linear-gradient(135deg, #FFC107, #FFECB3);
+            animation-delay: 0.2s;
+            color: #333;
+        }
+        
+        .ball:nth-child(3) {
+            background: linear-gradient(135deg, #4CAF50, #A5D6A7);
+            animation-delay: 0.4s;
+        }
+        
+        .ball:nth-child(4) {
+            background: linear-gradient(135deg, #2196F3, #90CAF9);
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            font-size: 14px;
+            opacity: 0.7;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .card {
+                width: 100%;
+            }
+            
+            .logo {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">HonestLotto</h1>
+            <p class="tagline">The Most Secure Lottery System in the CTF Universe</p>
+            
+            <div class="lottery-balls">
+                <div class="ball">W</div>
+                <div class="ball">I</div>
+                <div class="ball">N</div>
+                <div class="ball">!</div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="card info-card">
+                <h2 class="card-title"><i class="fas fa-shield-alt"></i> How It Works</h2>
+                <p>Welcome to <span class="highlight">HonestLotto</span>, the world's most secure cryptography-based lottery system!</p>
+                <p>Your unique lottery ticket is stored in your browser, encrypted with state-of-the-art cryptography and secured with quantum-resistant* algorithms.</p>
+                <p>To win the jackpot, guess the correct 6-digit winning number and claim your prize instantly!</p>
+                
+                <div class="prize-info">
+                    <h3 class="prize-title"><i class="fas fa-trophy"></i> GRAND PRIZE</h3>
+                    <p>The person to guess correctly wins our exclusive prize: fame, glory, a flag and a fair share of bragging rights</p>
+                </div>
+                
+                <div class="ticket-display">
+                    <p><i class="fas fa-ticket-alt"></i> YOUR ENCRYPTED TICKET</p>
+                    <div class="ticket-number">********</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-random"></i> Try Your Luck</h2>
+                <form id="guess-form">
+                    <div class="form-group">
+                        <label for="guess" class="form-label">Enter your 6-digit guess:</label>
+                        <input type="text" id="guess" name="guess" placeholder="e.g., 123456" maxlength="6" pattern="[0-9]{6}" required class="form-control">
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-dice"></i> Check My Number
+                    </button>
+                </form>
+                
+                <div id="alert-container"></div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>HonestLotto &copy; 2025. Secured with Military-Grade Encryption</p>
+            <p>* — somewhat</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            let ticketNo = '';
+            let winningNumber = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 5 + 3;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const opacity = Math.random() * 0.5 + 0.3;
+                const color = Math.random() > 0.5 ? 'rgba(108, 99, 255, 0.7)' : 'rgba(76, 175, 80, 0.7)';
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}vw`;
+                particle.style.top = `${posY}vh`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.opacity = opacity;
+                particle.style.background = color;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            const logo = document.querySelector('.logo');
+            logo.style.opacity = '0';
+            logo.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                logo.style.transition = 'all 1s ease';
+                logo.style.opacity = '1';
+                logo.style.transform = 'translateY(0)';
+            }, 300);
+            
+            const btn = document.querySelector('.btn');
+            btn.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+                this.style.transform = 'translateY(-3px)';
+                this.style.boxShadow = '0 15px 25px rgba(108, 99, 255, 0.3)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transition = 'all 0.3s ease';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 10px 20px rgba(108, 99, 255, 0.2)';
+            });
+            
+            const ticketDisplay = document.querySelector('.ticket-number');
+            ticketDisplay.textContent = 'Loading...';
+            
+            const guessInput = document.getElementById('guess');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            guessInput.disabled = true;
+            submitBtn.disabled = true;
+            
+            fetch('api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ request: 'ticket' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                ticketNo = data.ticket_no;
+                winningNumber = data.winning_number;
+                
+                let animatedTicket = '********';
+                ticketDisplay.textContent = animatedTicket;
+                
+                let interval = setInterval(() => {
+                    let newText = '';
+                    let revealCount = 0;
+                    
+                    for (let i = 0; i < 8; i++) {
+                        if (animatedTicket[i] === '*' && Math.random() > 0.8) {
+                            newText += ticketNo[i];
+                            revealCount++;
+                        } else {
+                            newText += animatedTicket[i];
+                        }
+                    }
+                    
+                    animatedTicket = newText;
+                    ticketDisplay.textContent = animatedTicket;
+                    
+                    if (!animatedTicket.includes('*')) {
+                        clearInterval(interval);
+                        guessInput.disabled = false;
+                        submitBtn.disabled = false;
+                    }
+                }, 200);
+            })
+            .catch(error => {
+                ticketDisplay.textContent = 'Error loading ticket';
+                console.error('Error:', error);
+            });
+            
+            const guessForm = document.getElementById('guess-form');
+            const alertContainer = document.getElementById('alert-container');
+            
+            guessForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const guess = guessInput.value;
+                
+                fetch('api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        request: 'check',
+                        guess: guess,
+                        ticket_no: ticketNo,
+                        winning_number: winningNumber
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showAlert('error', data.error);
+                    } else if (data.success) {
+                        showAlert('success', data.success);
+                    }
+                })
+                .catch(error => {
+                    showAlert('error', 'Network error. Please try again.');
+                    console.error('Error:', error);
+                });
+            });
+            
+            function showAlert(type, message) {
+                alertContainer.innerHTML = '';
+                
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                
+                const icon = document.createElement('i');
+                icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+                
+                const text = document.createTextNode(message);
+                
+                alert.appendChild(icon);
+                alert.appendChild(text);
+                
+                alertContainer.appendChild(alert);
+            }
+        });
+    </script>
+</body>
+</html> 
